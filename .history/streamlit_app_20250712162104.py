@@ -110,3 +110,4 @@ if get_clicked:
     st.markdown(f"❄️ **Coldest Day**: {coldest['day']} in {coldest['city']} ({coldest['temp']}°F)")
 
 
+

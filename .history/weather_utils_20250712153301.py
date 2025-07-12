@@ -63,8 +63,7 @@ def plot_multi_city_forecast(city_names, temps_list, dates):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    #plt.show()
-    return plt.gcf()
+    plt.show()
 
 
 def save_forecasts_to_csv(filename, city_names, temps_list):
@@ -116,6 +115,7 @@ def print_city_table(city_name, forecast_data):
     headers = ["Day", "Date", "Temp", "Condition", "Feels Like", "Note"]
     print(tabulate(table, headers=headers, tablefmt="grid"))
    
+# --- add near the bottom of weather_utils.py ---
 
 def parse_5day_forecast(forecast_json):
     """
@@ -143,11 +143,6 @@ def get_city_forecast(city: str):
     """
     raw_json, display_name = fetch_weather(city)
     parsed_5day = parse_5day_forecast(raw_json)
-    # Grab the current weather from the first forecast entry
-    current_slot = raw_json["list"][0]
-    current_temp = round(current_slot["main"]["temp"])
-    current_condition = current_slot["weather"][0]["description"]
-
-    return display_name, parsed_5day, (current_temp, current_condition)
+    return display_name, parsed_5day
 
 

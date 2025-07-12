@@ -96,17 +96,3 @@ if get_clicked:
         save_forecasts_to_csv("forecast_log.csv", city_names, temps_list)
         st.success("Forecasts saved to forecast_log.csv")
 
-    # Identify hottest and coldest
-    hottest = {"temp": float('-inf')}
-    coldest = {"temp": float('inf')}
-    for city, temps in zip(city_names, temps_list):
-        for i, temp in enumerate(temps):
-            if temp > hottest["temp"]:
-                hottest = {"temp": temp, "city": city, "day": date_labels[i]}
-            if temp < coldest["temp"]:
-                coldest = {"temp": temp, "city": city, "day": date_labels[i]}
-
-    st.markdown(f"🔥 **Hottest Day**: {hottest['day']} in {hottest['city']} ({hottest['temp']}°F)")
-    st.markdown(f"❄️ **Coldest Day**: {coldest['day']} in {coldest['city']} ({coldest['temp']}°F)")
-
-

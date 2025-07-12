@@ -54,9 +54,7 @@ if get_clicked:
 
     for city in cities:
         try:
-            display_name, five_day, current_weather = get_city_forecast(city)
-            st.markdown(f"**Current Weather in {display_name}**: {current_weather[0]}°F, {current_weather[1].capitalize()}")
-
+            display_name, five_day = get_city_forecast(city)
             st.subheader(f"📍 {display_name}")
 
             table_data = []
@@ -94,19 +92,5 @@ if get_clicked:
         fig = plot_multi_city_forecast(city_names, temps_list, date_labels)
         st.pyplot(fig)
         save_forecasts_to_csv("forecast_log.csv", city_names, temps_list)
-        st.success("Forecasts saved to forecast_log.csv")
-
-    # Identify hottest and coldest
-    hottest = {"temp": float('-inf')}
-    coldest = {"temp": float('inf')}
-    for city, temps in zip(city_names, temps_list):
-        for i, temp in enumerate(temps):
-            if temp > hottest["temp"]:
-                hottest = {"temp": temp, "city": city, "day": date_labels[i]}
-            if temp < coldest["temp"]:
-                coldest = {"temp": temp, "city": city, "day": date_labels[i]}
-
-    st.markdown(f"🔥 **Hottest Day**: {hottest['day']} in {hottest['city']} ({hottest['temp']}°F)")
-    st.markdown(f"❄️ **Coldest Day**: {coldest['day']} in {coldest['city']} ({coldest['temp']}°F)")
-
+st.success("Forecasts saved to forecast_log.csv")
 

@@ -16,49 +16,26 @@ st.title("🌤️ Weather Forecast")
 st.markdown("Enter up to 3 city names to see their 5-day weather forecast.")
 
 # Input Section
-city_input = st.text_input("Cities (comma-separated):").strip()
+city_input = st.text_input("Cities(comma-separated):").strip()
 
-# Show buttons side by side
-col1, col2 = st.columns([1, 1])
-with col1:
-    get_clicked = st.button("Get Forecast")
-with col2:
-    clear_clicked = st.button("Clear Cities")
-
-# Handle "Clear" click first
-if clear_clicked:
-    st.rerun()
-
-# Handle "Get Forecast" click
-if get_clicked:
-    all_cities_entered = [c.strip() for c in city_input.split(",") if c.strip()]
-
-    # Optional info if more than 3 entered
-    if len(all_cities_entered) > 3:
-        st.info("Only the first 3 cities will be used.")
-
-    cities = all_cities_entered[:3]
-
-    if len(cities) == 1 and " " in cities[0]:
-        st.warning("Did you forget commas? Try: `london, paris, tokyo`")
-        st.stop()
+if st.button("Get Forecast"):
+    cities = [c.strip() for c in city_input.split(",") if c.strip()][:3]
 
     if not cities:
         st.warning("Please enter at least one city.")
         st.stop()
 
-    # --- Forecast logic (everything else you had) ---
+    # containers to accumulate multi-city data for the chart
     city_names = []
-    temps_list = []
-    date_labels = None
+    temps_list  = []
+    date_labels = None          # we’ll set this once
 
     for city in cities:
         try:
-            display_name, five_day, current_weather = get_city_forecast(city)
-            st.markdown(f"**Current Weather in {display_name}**: {current_weather[0]}°F, {current_weather[1].capitalize()}")
+            display_name, five_day = get_city_forecast(city)
 
+            # ----- UI output per city -----
             st.subheader(f"📍 {display_name}")
-
             table_data = []
             temps_this_city = []
 
@@ -81,6 +58,7 @@ if get_clicked:
                  "Note": [row[4] for row in table_data]}
             )
 
+            # ----- collect for combined chart -----
             city_names.append(display_name)
             temps_list.append(temps_this_city)
             if date_labels is None:
@@ -89,24 +67,8 @@ if get_clicked:
         except Exception as e:
             st.error(f"⚠️ {city}: {e}")
 
+    # ----- show combined chart if ≥1 city succeeded -----
     if city_names:
         st.subheader("📈 Temperature Trend (All Cities)")
         fig = plot_multi_city_forecast(city_names, temps_list, date_labels)
         st.pyplot(fig)
-        save_forecasts_to_csv("forecast_log.csv", city_names, temps_list)
-        st.success("Forecasts saved to forecast_log.csv")
-
-    # Identify hottest and coldest
-    hottest = {"temp": float('-inf')}
-    coldest = {"temp": float('inf')}
-    for city, temps in zip(city_names, temps_list):
-        for i, temp in enumerate(temps):
-            if temp > hottest["temp"]:
-                hottest = {"temp": temp, "city": city, "day": date_labels[i]}
-            if temp < coldest["temp"]:
-                coldest = {"temp": temp, "city": city, "day": date_labels[i]}
-
-    st.markdown(f"🔥 **Hottest Day**: {hottest['day']} in {hottest['city']} ({hottest['temp']}°F)")
-    st.markdown(f"❄️ **Coldest Day**: {coldest['day']} in {coldest['city']} ({coldest['temp']}°F)")
-
-

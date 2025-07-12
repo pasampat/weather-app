@@ -143,11 +143,6 @@ def get_city_forecast(city: str):
     """
     raw_json, display_name = fetch_weather(city)
     parsed_5day = parse_5day_forecast(raw_json)
-    # Grab the current weather from the first forecast entry
-    current_slot = raw_json["list"][0]
-    current_temp = round(current_slot["main"]["temp"])
-    current_condition = current_slot["weather"][0]["description"]
 
-    return display_name, parsed_5day, (current_temp, current_condition)
 
 

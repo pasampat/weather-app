@@ -126,7 +126,7 @@ if get_clicked:
                 f,
                 file_name="forecast_log.csv",
                 mime="text/csv",
-            )
+                )
 
         # Safely calculate hottest/coldest only if at least 1 city succeeded
         hottest = {"temp": float('-inf')}

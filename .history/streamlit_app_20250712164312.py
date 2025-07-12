@@ -16,12 +16,6 @@ st.set_page_config(page_title="Weather App", page_icon="🌤️")
 st.title("🌤️ Weather Forecast")
 st.markdown("Enter up to 3 city names to see their 5-day weather forecast.")
 
-if "csv_initialized" not in st.session_state:
-    # First load -> wipe the file
-    open("forecast_log.csv", "w").close()
-    st.session_state.csv_initialized = True
-
-
 # Input Section
 city_input = st.text_input("Cities (comma-separated):").strip()
 
@@ -118,15 +112,14 @@ if get_clicked:
 
         save_forecasts_to_csv("forecast_log.csv", city_names, temps_list)
         # Let user download the file
-        st.success("Forecasts saved to forecast_log.csv")
-        # Optional: download button
         with open("forecast_log.csv", "rb") as f:
             st.download_button(
-                "⬇️ Download session CSV",
-                f,
+                label="⬇️ Download forecast_log.csv",
+                data=f,
                 file_name="forecast_log.csv",
-                mime="text/csv",
+                mime="text/csv"
             )
+        st.success("Forecasts saved to forecast_log.csv")
 
         # Safely calculate hottest/coldest only if at least 1 city succeeded
         hottest = {"temp": float('-inf')}

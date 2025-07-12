@@ -120,13 +120,13 @@ if get_clicked:
         # Let user download the file
         st.success("Forecasts saved to forecast_log.csv")
         # Optional: download button
-        with open("forecast_log.csv", "rb") as f:
-            st.download_button(
-                "⬇️ Download session CSV",
-                f,
-                file_name="forecast_log.csv",
-                mime="text/csv",
-            )
+with open("forecast_log.csv", "rb") as f:
+    st.download_button(
+        "⬇️ Download session CSV",
+        f,
+        file_name="forecast_log.csv",
+        mime="text/csv",
+    )
 
         # Safely calculate hottest/coldest only if at least 1 city succeeded
         hottest = {"temp": float('-inf')}

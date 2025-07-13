@@ -1,13 +1,3 @@
-"""
-streamlit
-
-- Lets user input up to 3 cities, comma-separated, via web UI
-- On 'Get Forecast', fetches 5-day forecast for each city, displays tables and plots.
-- Handles most API and user errors gracefully
-- saves all forecasts to a CSV for download
-- Identifies hottest and coldest day/city among all entered cities.
-- keeps session clean using Streamlit session_state
-"""
 import streamlit as st
 import requests
 from weather_utils import (
@@ -21,7 +11,16 @@ from weather_utils import (
     get_city_forecast
 )
 
+"""
+streamlit
 
+- Lets user input up to 3 cities, comma-separated, via web UI.
+- On 'Get Forecast', fetches 5-day forecast for each city, displays tables and plots.
+- Handles most API and user errors gracefully
+- Saves all forecasts to a CSV for download.
+- Identifies hottest and coldest day/city among all entered cities.
+- Keeps session clean using Streamlit session_state.
+"""
 
 st.set_page_config(page_title="Weather App", page_icon="🌤️")
 st.title("🌤️ Weather Forecast")
@@ -32,17 +31,17 @@ if "csv_initialized" not in st.session_state:
     open("forecast_log.csv", "w").close()
     st.session_state.csv_initialized = True
 
-#input Section 
+# --- Input Section ---
 city_input = st.text_input("Cities (comma-separated):").strip()
 
-#button columns for UI (side by side)
+# Button columns for UI (side by side)
 col1, col2 = st.columns([1, 1])
 with col1:
     get_clicked = st.button("Get Forecast")
 with col2:
     clear_clicked = st.button("Clear Cities")
 
-#clear" just reruns the script, resetting the input
+# "Clear" just reruns the script, resetting the input
 if clear_clicked:
     st.rerun()
 
@@ -56,7 +55,7 @@ if get_clicked:
 
     cities = all_cities_entered[:3]
 
-    #common error: user uses spaces not commas
+    # Common error: user uses spaces not commas
     if len(cities) == 1 and " " in cities[0]:
         st.warning("Did you forget commas? Try: `london, paris, tokyo`")
         st.stop()
@@ -65,7 +64,7 @@ if get_clicked:
         st.warning("Please enter at least one city.")
         st.stop()
 
-    # main forecast logic 
+    # --- Main forecast logic ---
     city_names = []
     temps_list = []
     date_labels = None
@@ -75,7 +74,7 @@ if get_clicked:
             # Use helper to get both display_name and clean 5-day list
             display_name, five_day = get_city_forecast(city)
 
-            st.subheader(f"📍 {display_name}")  
+            st.subheader(f"📍 {display_name}")  # Nice city label
 
             table_data = []
             temps_this_city = []

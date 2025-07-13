@@ -21,10 +21,10 @@ def main():
         - Extracts one forecast per day from the API's 3-hour-interval data.
         - Builds lists for plotting, CSV, and pretty table
     - After all cities are entered:
-        - Plots the forecasts together for comparison
-        - Saves all city forecasts to CSV file
-        - Finds and displays the overall hottest and coldest day/city
-    - Offers the user the chance to run again with new cities or exit
+        - Plots the forecasts together for comparison.
+        - Saves all city forecasts to CSV file.
+        - Finds and displays the overall hottest and coldest day/city.
+    - Offers the user the chance to run again with new cities or exit.
     - Handles network errors, API key errors, and user typos gracefully
     """
     open('forecast_log.csv', 'w').close()  # clear (overwrite) CSV file at the start
@@ -70,7 +70,7 @@ def main():
                         dates.append(readable_date)
                 city_names.append(city_name)
                 temps_list.append(temps)
-                print_city_table(city_name, forecast_data)  #print the table for this city
+                print_city_table(city_name, forecast_data)  # Pretty-print the table for this city
 
             except requests.exceptions.HTTPError as e:
                 code = e.response.status_code

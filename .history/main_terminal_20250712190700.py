@@ -70,7 +70,7 @@ def main():
                         dates.append(readable_date)
                 city_names.append(city_name)
                 temps_list.append(temps)
-                print_city_table(city_name, forecast_data)  #print the table for this city
+                print_city_table(city_name, forecast_data)  # the table for this city
 
             except requests.exceptions.HTTPError as e:
                 code = e.response.status_code

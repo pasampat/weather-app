@@ -1,6 +1,3 @@
-from dotenv import load_dotenv
-import os
-load_dotenv()    #   loads variables from .env into environment
 
 import requests
 import matplotlib.pyplot as plt
@@ -9,16 +6,14 @@ import os
 from datetime import datetime
 from tabulate import tabulate
 
-API_KEY = os.getenv("API_KEY")   # grabs your API key from environment variable
 
-if not API_KEY:
-    raise ValueError("API_KEY not found. Please define it in your .env file.")    # fail early if missing
+
+
+# 🔑 Hardcoded API key
+API_KEY = '2904c776a4c72c5d8eb52668bfecc2f8'
 
 def fetch_weather(city):
-    """get weather data for a city. First grabs coordinates, then pulls 5-day forecast using those.
-    Returns both the raw forecast JSON and the city name as found by the API.
-    """
-    #lat/lon from city name (first API call)
+    # lat/lon from city name
     geo_url = 'https://api.openweathermap.org/data/2.5/weather'
     geo_params = {
         'q': city,
@@ -26,12 +21,12 @@ def fetch_weather(city):
         'units': 'imperial'
     }
     geo_response = requests.get(geo_url, params=geo_params)
-    geo_response.raise_for_status()   # will raise if the request fails (e.g., city not found)
+    geo_response.raise_for_status()
     geo_data = geo_response.json()
     lat = geo_data['coord']['lat']
     lon = geo_data['coord']['lon']
 
-    #   use lat/lon to get forecast from 5-day endpoint
+    # u lat/lon to get forecast from One Call API
     one_call_url = 'https://api.openweathermap.org/data/2.5/forecast'
     one_call_params = {
         'lat': lat,
@@ -42,14 +37,13 @@ def fetch_weather(city):
     }
     weather_response = requests.get(one_call_url, params=one_call_params)
     weather_response.raise_for_status()
-    return weather_response.json(), geo_data['name']   # returns both forecast and city name
+    return weather_response.json(), geo_data['name']  
 
 
 def plot_forecast(city_name, temps):
-    """plots a 5-day temperature line for one city.
-    Just a basic matplotlib plot (days on x, temp on y).
-    """
+    """Plot 5-day temperature forecast for a single city."""
     days = [f"Day {i+1}" for i in range(len(temps))]
+
     plt.plot(days, temps, marker='o', label=city_name)
     plt.title("5-Day Temperature Forecast")
     plt.xlabel("Day")
@@ -57,11 +51,10 @@ def plot_forecast(city_name, temps):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show()    # pop up the chart window
+    plt.show()
 
 def plot_multi_city_forecast(city_names, temps_list, dates):
-    """plot multiple cities’ forecasts on the same chart using calendar dates.
-    does not call plt.show() — leaves that to main code if needed."""
+    """Plot 5-day temperature forecasts for multiple cities using real dates."""
     for city_name, temps in zip(city_names, temps_list):
         plt.plot(dates, temps, marker='o', label=city_name)
 
@@ -71,21 +64,18 @@ def plot_multi_city_forecast(city_names, temps_list, dates):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    # plt.show() intentionally not called here
-    return plt.gcf()    # return figure object (good for saving or later use)
+    #plt.show()
+    return plt.gcf()
 
 
 def save_forecasts_to_csv(filename, city_names, temps_list):
-    """save all forecasts (city name and temps) to a CSV file.
-    Adds a header if the file is empty or new.
-    """
+    """Save city forecasts to a CSV file."""
     needs_header = not os.path.isfile(filename) or os.path.getsize(filename) == 0
 
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
 
         if needs_header:
-            #header is 'City', then Day 1, Day 2, etc
             header = ['City'] + [f'Day {i+1}' for i in range(len(temps_list[0]))]
             writer.writerow(header)
 
@@ -93,12 +83,12 @@ def save_forecasts_to_csv(filename, city_names, temps_list):
             row = [city] + temps
             writer.writerow(row)
 
-    print(f"\nForecasts saved to {filename}")   # just a user-friendly confirmation
+    print(f"\nForecasts saved to {filename}")
+
 
 
 def get_weather_note(condition):
-    """returns a little emoji tip depending on weather condition string.
-    expects condition in lower-case."""
+    """Return emoji tip based on condition."""
     if "rain" in condition:
         return "☔ Bring a jacket"
     elif "clear" in condition:
@@ -108,34 +98,34 @@ def get_weather_note(condition):
     elif "cloud" in condition:
         return "☁️ Cloudy day"
     else:
-        return ""   # if nothing matches, no note
-
+        return ""
 
 def print_city_table(city_name, forecast_data):
     """
-    print a pretty 5-day forecast table for a city.
-    expects forecast_data: list of dicts with 'date', 'temp', 'condition', 'feels_like'
+    Display a 5-day forecast table for a city.
+    Each forecast entry is a dictionary with 'date', 'temp', 'condition', 'feels_like'
     """
     print(f"\n5-Day Forecast for {city_name}:\n")
+
     table = []
     for i, entry in enumerate(forecast_data, 1):
         temp = f"{entry['temp']}°F"
         feels = f"{entry['feels_like']}°F"
         note = get_weather_note(entry['condition'].lower())
         table.append([i, entry['date'], temp, entry['condition'].capitalize(), feels, note])
+
     headers = ["Day", "Date", "Temp", "Condition", "Feels Like", "Note"]
-    print(tabulate(table, headers=headers, tablefmt="grid"))   # grid looks tidy in terminal
+    print(tabulate(table, headers=headers, tablefmt="grid"))
    
 
 def parse_5day_forecast(forecast_json):
     """
-    parse the OpenWeatherMap forecast JSON, and return a list of 5 dicts.
-    Each dict is a day's summary (date, temp, feels_like, condition).
-    OWM forecast is in 3-hour steps (8 per day) so just grab every 8th entry.
+    Return a list of 5 dicts — one per day — each with
+    date, temp, feels_like, and condition.
     """
     forecast_list = forecast_json["list"]
     parsed = []
-    for i in range(0, len(forecast_list), 8):  #every 8th = new day (approx)
+    for i in range(0, len(forecast_list), 8):  # 3-h steps → one per day
         slot = forecast_list[i]
         parsed.append(
             {
@@ -145,16 +135,15 @@ def parse_5day_forecast(forecast_json):
                 "condition": slot["weather"][0]["description"],
             }
         )
-    return parsed[:5]    #just the first 5 days (in case more)
-
+    return parsed[:5]  # safety
 
 def get_city_forecast(city: str):
     """
-    main high-level helper. gets forecast for a city and parses it into a summary.
-    returns: city name, list of 5 daily forecast dicts.
-    raises same exceptions as fetch_weather if API/network fails.
+    High-level helper:  ➜ raw JSON, city_display_name, parsed_5day_list
+    Raises the same requests exceptions you already handle.
     """
     raw_json, display_name = fetch_weather(city)
     parsed_5day = parse_5day_forecast(raw_json)
     return display_name, parsed_5day
+
 

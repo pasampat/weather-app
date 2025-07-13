@@ -1,13 +1,4 @@
-"""
-streamlit
 
-- Lets user input up to 3 cities, comma-separated, via web UI
-- On 'Get Forecast', fetches 5-day forecast for each city, displays tables and plots.
-- Handles most API and user errors gracefully
-- saves all forecasts to a CSV for download
-- Identifies hottest and coldest day/city among all entered cities.
-- keeps session clean using Streamlit session_state
-"""
 import streamlit as st
 import requests
 from weather_utils import (

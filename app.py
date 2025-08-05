@@ -24,7 +24,7 @@ from weather_utils import (
 
 
 st.set_page_config(page_title="Weather App", page_icon="🌤️")
-st.title("🌤️ Weather Forecast")
+st.subheader("🌤️ Weather Forecast")
 st.markdown("Enter up to 3 city names to see their 5-day weather forecast.")
 
 if "csv_initialized" not in st.session_state:
@@ -75,7 +75,7 @@ if get_clicked:
             # Use helper to get both display_name and clean 5-day list
             display_name, five_day = get_city_forecast(city)
 
-            st.subheader(f"📍 {display_name}")  
+            st.markdown(f"##### 📍 {display_name}")  
 
             table_data = []
             temps_this_city = []
@@ -125,7 +125,7 @@ if get_clicked:
             st.error(f"Unexpected error while processing `{city}`: {e}")
 
     if city_names:
-        st.subheader("📈 Temperature Trend (All Cities)")
+        st.markdown("##### 📈 Temperature Trend (All Cities)")
         # Multi-line matplotlib chart
         fig = plot_multi_city_forecast(city_names, temps_list, date_labels)
         st.pyplot(fig)

@@ -4,7 +4,7 @@ A Python-based weather forecast app that works both via **command line** and a *
 
 ---
 
-### 🎯 **Try it live:** [Weather Forecast App](https://resumekeywordmatcher-ck8izh5i2kdeatkwxjjvb2.streamlit.app/)
+### 🎯 **Try it live:** [Weather Forecast App](https://apps-management-h9vndbh9arskvzgylumcqs.streamlit.app/)
 
 ## 🚀 Features
 ### ✅ Command-Line Tool (`main_terminal.py`)

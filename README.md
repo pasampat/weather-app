@@ -107,7 +107,7 @@ python main_terminal.py
 
 ### Streamlit Web App
 ```
-streamlit run streamlit_app.py
+streamlit run app.py
 ```
 
 

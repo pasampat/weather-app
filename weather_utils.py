@@ -8,8 +8,9 @@ import csv
 import os
 from datetime import datetime
 from tabulate import tabulate
+import streamlit as st
 
-API_KEY = os.getenv("API_KEY")   # grabs your API key from environment variable
+API_KEY = st.secrets["WEATHER_API_KEY"]
 
 if not API_KEY:
     raise ValueError("API_KEY not found. Please define it in your .env file.")    # fail early if missing

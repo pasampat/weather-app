@@ -1,4 +1,4 @@
-# 🌤️ Weather Forecast App
+## 🌤️ Weather Forecast App
 
 A Python-based weather forecast app that works both via **command line** and a **Streamlit web interface**. Users can enter up to 3 cities, view 5-day forecasts, see trends in a chart, and download their session’s data as a CSV — all powered by the OpenWeatherMap API.
 

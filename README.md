@@ -6,7 +6,7 @@ A Python-based weather forecast app that works both via **command line** and a *
 
 ## 🎯 **Try it live:** [Weather Forecast App](https://apps-management-h9vndbh9arskvzgylumcqs.streamlit.app/)
 
-## 🚀 Features
+### 🚀 Features
 ### ✅ Command-Line Tool (`main_terminal.py`)
 
 - 🔁 **3-City Input Loop** – Enter up to 3 cities at a time.
